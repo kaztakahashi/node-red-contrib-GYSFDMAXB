@@ -5,7 +5,7 @@ module.exports = function(RED) {
       node.on('input', function(msg) {
         var serialPort = require('serialport');
         var Readline = serialPort.parsers.Readline;
-        var port = new serialPort('/dev/ttyAMA0', {
+        var port = new serialPort('/dev/serial0', {
           baudRate: 9600,
           dataBits: 8,
           parity: 'none',
