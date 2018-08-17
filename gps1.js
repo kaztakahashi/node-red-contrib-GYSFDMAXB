@@ -26,7 +26,7 @@ module.exports = function(RED) {
             var date = new Date ( '20' + day[1] + '-' + day[2] + '-' + day[3] + ' ' + utc[1] + ':' + utc[2] + ':' + utc[3] + '+00:00');
             var result = '{ \"date\": \"' + date + '\"';
             var lat = 0;
-            var lon = 0';
+            var lon = 0;
             if ( data.split(',')[2] == 'A' ) {
               lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
               var lat2 = lat[2] + Math.round(lat[3]/60);
