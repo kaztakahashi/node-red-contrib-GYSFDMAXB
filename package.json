@@ -1,0 +1,19 @@
+{
+  "name": "red-contrib-gysfdmaxb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gps1.js",
+  "node-red" : {
+	  "nodes" : {
+		  "GYSFDMAXB" : "gps1.js"
+	  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serialport": "^6.2.2"
+  }
+}
