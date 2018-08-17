@@ -25,10 +25,10 @@ module.exports = function(RED) {
             var utc = data.split(',')[1].match(/^(\d{2})(\d{2})(\d{2})\.\d{3}$/);
             var date = new Date ( '20' + day[1] + '-' + day[2] + '-' + day[3] + ' ' + utc[1] + ':' + utc[2] + ':' + utc[3] + '+00:00');
             var result = '{ \"date\": \"' + date + '\"';
-            var lat = '00.0000';
-            var lon = '00.0000';
+            var lat = 0;
+            var lon = 0';
             if ( data.split(',')[2] == 'A' ) {
-              lat = data.split(',')[3].match(/^(\d{1,3})(\d{2})\.(\d{4})$/);
+              lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
               var lat2 = lat[2] + Math.round(lat[3]/60);
               lat = lat[1] + '.' + lat2;
               result += ', \"lat-dir\": \"' + data.split(',')[4] + '\", \"lat\": ' + lat;
