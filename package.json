@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "gps1.js",
+  "config": {
+    "unsafe-perm":true
+  },
   "node-red" : {
 	  "nodes" : {
 		  "GYSFDMAXB" : "gps1.js"
