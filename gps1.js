@@ -2,10 +2,12 @@ module.exports = function(RED) {
     function NodeGYSFDMAXB(config) {
       RED.nodes.createNode(this,config);
       var node = this;
+      node.topic = config.topic || "";
+
       node.on('input', function(msg) {
         var serialPort = require('serialport');
         var Readline = serialPort.parsers.Readline;
-        var port = new serialPort('/dev/serial0', {
+        var port = new serialPort(config.port, {
           baudRate: 9600,
           dataBits: 8,
           parity: 'none',
@@ -25,8 +27,8 @@ module.exports = function(RED) {
             var utc = data.split(',')[1].match(/^(\d{2})(\d{2})(\d{2})\.\d{3}$/);
             var date = new Date ( '20' + day[1] + '-' + day[2] + '-' + day[3] + ' ' + utc[1] + ':' + utc[2] + ':' + utc[3] + '+00:00');
             var result = '{ \"date\": \"' + date + '\"';
-            var lat = 0;
-            var lon = 0;
+            var lat = -1;
+            var lon = -1;
             if ( data.split(',')[2] == 'A' ) {
               lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
               var lat2 = lat[2] + Math.round(lat[3]/60);
@@ -39,8 +41,10 @@ module.exports = function(RED) {
               result += ', \"lon-dir\": \"' + data.split(',')[6] + '\", \"lon\": ' + lon;
             }
             result += ' }';
+            if(node.topic !== undefined && node.topic != "") msg.topic=node.topic;
             msg.payload = {
 		    "date" : date,
+		    "epoch-time" : Date.parse(date) / 1000,
 		    "lat-dir" : data.split(',')[4],
 		    "lat" : lat,
 		    "lon-dir" : data.split(',')[6],

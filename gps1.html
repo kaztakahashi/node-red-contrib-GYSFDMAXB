@@ -1,13 +1,25 @@
+<script type="text/x-red" data-template-name="GYSFDMAXB">
+  <div class="form-row">
+    <label for="node-input-port"><i class="fa fa-wrench"></i> port</label>
+    <input type="text" id="node-input-port" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-topic"><i class="fa fa-tasks"></i> topic</label>
+    <input type="text" id="node-input-topic" />
+  </div>
+</script>
+
 <script type="text/javascript">
     RED.nodes.registerType('GYSFDMAXB',{
-        category: 'function',
-        color: '#a6bbcf',
+        category: 'input',
+        color: '#0066cc',
         defaults: {
-            name: {value:""}
+            port: {value: "/dev/serial0", required:true },
+	    topic: {value: "GYSFDMAXB", required:false }
         },
         inputs:1,
         outputs:1,
-        icon: "file.png",
+        icon: "satellite-of-ground.png",
         label: function() {
             return this.name||"GYSFDMAXB";
         }
@@ -22,6 +34,6 @@
 </script>
 
 <script type="text/x-red" data-help-name="GYSFDMAXB">
-    <p>A simple node that converts the message payloads into all lower-case characters</p>
+    <p>Read GPS signals from AE-GYSFDMAXB</p>
 </script>
 
