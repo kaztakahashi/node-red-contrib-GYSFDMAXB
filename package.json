@@ -1,11 +1,12 @@
 {
-  "name": "red-contrib-gysfdmaxb",
-  "version": "1.0.0",
+  "name": "node-red-contrib-gysfdmaxb-serial0",
+  "version": "1.0.2",
   "description": "",
   "main": "gps1.js",
   "config": {
     "unsafe-perm":true
   },
+  "keywords" : [ "node-red" ],
   "node-red" : {
 	  "nodes" : {
 		  "GYSFDMAXB" : "gps1.js"
