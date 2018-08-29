@@ -25,29 +25,33 @@ module.exports = function(RED) {
           if (data.indexOf('$GPRMC') !== -1) {
             var day = data.split(',')[9].match(/^(\d{2})(\d{2})(\d{2})$/);
             var utc = data.split(',')[1].match(/^(\d{2})(\d{2})(\d{2})\.\d{3}$/);
-            var date = new Date ( '20' + day[1] + '-' + day[2] + '-' + day[3] + ' ' + utc[1] + ':' + utc[2] + ':' + utc[3] + '+00:00');
+            var date = new Date ( '20' + day[3] + '-' + day[2] + '-' + day[1] + ' ' + utc[1] + ':' + utc[2] + ':' + utc[3] + '+00:00');
             var result = '{ \"date\": \"' + date + '\"';
-            var lat = -1;
-            var lon = -1;
+            var lat;
+            var lon;
             if ( data.split(',')[2] == 'A' ) {
               lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
               var lat2 = Math.round((lat[2] + lat[3])*100/60);
               lat = lat[1] + '.' + lat2;
-              result += ', \"lat-dir\": \"' + data.split(',')[4] + '\", \"lat\": ' + lat;
+              result += ', \"latDir\": \"' + data.split(',')[4] + '\", \"lat\": ' + lat;
+              if ( data.split(',')[4] === "S" ) {
+		      lat = -lat;
+	      }
 
               lon = data.split(',')[5].match(/^(\d{1,3})(\d{2})\.(\d{4})$/);
               var lon2 = Math.round((lon[2] + lon[3])*100/60);
               lon = lon[1] + '.' + lon2;
-              result += ', \"lon-dir\": \"' + data.split(',')[6] + '\", \"lon\": ' + lon;
+              result += ', \"lonDir\": \"' + data.split(',')[6] + '\", \"lon\": ' + lon;
+              if ( data.split(',')[6] === "W" ) {
+		      lon = -lon;
+	      }
             }
             result += ' }';
             if(node.topic !== undefined && node.topic != "") msg.topic=node.topic;
             msg.payload = {
 		    "date" : date,
 		    "epochTime" : Date.parse(date) / 1000,
-		    "latDir" : data.split(',')[4],
 		    "lat" : lat,
-		    "lonDir" : data.split(',')[6],
 		    "lon" : lon
 	    }
             console.log(result);
