@@ -44,10 +44,10 @@ module.exports = function(RED) {
             if(node.topic !== undefined && node.topic != "") msg.topic=node.topic;
             msg.payload = {
 		    "date" : date,
-		    "epoch-time" : Date.parse(date) / 1000,
-		    "lat-dir" : data.split(',')[4],
+		    "epochTime" : Date.parse(date) / 1000,
+		    "latDir" : data.split(',')[4],
 		    "lat" : lat,
-		    "lon-dir" : data.split(',')[6],
+		    "lonDir" : data.split(',')[6],
 		    "lon" : lon
 	    }
             console.log(result);
