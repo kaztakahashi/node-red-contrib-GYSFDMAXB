@@ -31,12 +31,12 @@ module.exports = function(RED) {
             var lon = -1;
             if ( data.split(',')[2] == 'A' ) {
               lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
-              var lat2 = lat[2] + Math.round(lat[3]/60);
+              var lat2 = Math.round((lat[2] + lat[3])*100/60);
               lat = lat[1] + '.' + lat2;
               result += ', \"lat-dir\": \"' + data.split(',')[4] + '\", \"lat\": ' + lat;
 
               lon = data.split(',')[5].match(/^(\d{1,3})(\d{2})\.(\d{4})$/);
-              var lon2 = lon[2] + Math.round(lon[3]/60);
+              var lon2 = Math.round((lon[2] + lon[3])*100/60);
               lon = lon[1] + '.' + lon2;
               result += ', \"lon-dir\": \"' + data.split(',')[6] + '\", \"lon\": ' + lon;
             }
