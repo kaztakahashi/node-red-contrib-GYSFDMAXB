@@ -3,6 +3,7 @@ module.exports = function(RED) {
       RED.nodes.createNode(this,config);
       var node = this;
       node.topic = config.topic || "";
+      node.status({fill:"grey",shape:"ring",text:"Unknown"});
 
       node.on('input', function(msg) {
         var serialPort = require('serialport');
@@ -52,11 +53,16 @@ module.exports = function(RED) {
 
             if ( lat == null || lon == null || lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
               message = 'A GPS receiver works but it has no signal or weak signal.';
+		      var slat = 'n/a';
+		      var slon = 'n/a';
               if ( lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
                 lat;
                 lon;
-	      };
-            };
+              };
+	    } else { 
+              var slat = Math.floor(lat*100)/100;
+              var slon = Math.floor(lon*100)/100;
+	    };
             msg.payload = {
 		    'date' : date,
 		    'epochTime' : Date.parse(date) / 1000,
@@ -64,6 +70,10 @@ module.exports = function(RED) {
 		    'lon' : lon,
 		    'message' : message
 	    }
+
+            var sText = "[lat: " + slat + " / lon: " + slon + " ]";
+            node.status({fill:"green",shape:"dot",text:sText});
+
             console.log(result);
             node.send(msg);
             if ( date != null ) {
@@ -83,6 +93,7 @@ module.exports = function(RED) {
 	    }
             console.log('timed out');
             if ( node.topic !== undefined && node.topic != "" ) msg.topic = node.topic;
+            node.status({fill:"red",shape:"dot",text:"Disconnected"});
             node.send(msg);
 	  };
 	},10000);
