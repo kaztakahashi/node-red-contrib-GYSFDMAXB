@@ -29,6 +29,7 @@ module.exports = function(RED) {
             var result = '{ \"date\": \"' + date + '\"';
             var lat;
             var lon;
+            var message;
             if ( data.split(',')[2] == 'A' ) {
               lat = data.split(',')[3].match(/^(\d{2,3})(\d{2})\.(\d{4})$/);
               var lat2 = Math.round((lat[2] + lat[3])*100/60);
@@ -47,12 +48,21 @@ module.exports = function(RED) {
 	      }
             }
             result += ' }';
-            if(node.topic !== undefined && node.topic != "") msg.topic=node.topic;
+            if ( node.topic !== undefined && node.topic != "" ) msg.topic=node.topic;
+
+            if ( lat == null || lon == null || lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
+              message = 'A GPS receiver works but it has no signal or weak signal.';
+              if ( lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
+                lat;
+                lon;
+	      };
+            };
             msg.payload = {
-		    "date" : date,
-		    "epochTime" : Date.parse(date) / 1000,
-		    "lat" : lat,
-		    "lon" : lon
+		    'date' : date,
+		    'epochTime' : Date.parse(date) / 1000,
+		    'lat' : lat,
+		    'lon' : lon,
+		    'message' : message
 	    }
             console.log(result);
             node.send(msg);
@@ -61,6 +71,21 @@ module.exports = function(RED) {
             }
 	  }
         });
+
+	setTimeout( () => {
+          if ( port.isOpen ) {
+            port.close();
+            var newdate = new Date();
+            var date = newdate.getTime();
+            msg.payload = {
+		    'epochTime' : Math.floor ( date / 1000 ),
+		    'message' :'A GPS receiver is not connected or does not work.'
+	    }
+            console.log('timed out');
+            if ( node.topic !== undefined && node.topic != "" ) msg.topic = node.topic;
+            node.send(msg);
+	  };
+	},10000);
 
       });
     }
